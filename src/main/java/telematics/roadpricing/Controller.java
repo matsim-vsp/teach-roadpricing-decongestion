@@ -17,7 +17,7 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
-package playground.vsptelematics.roadpricing;
+package telematics.roadpricing;
 
 import java.util.ArrayList;
 import java.util.List;

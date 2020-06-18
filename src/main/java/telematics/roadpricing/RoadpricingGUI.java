@@ -17,7 +17,7 @@
  *                                                                         *
  * *********************************************************************** */
 
-package playground.vsptelematics.roadpricing;
+package telematics.roadpricing;
 
 import org.matsim.run.gui.Gui;
 
