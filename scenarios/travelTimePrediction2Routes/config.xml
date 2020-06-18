@@ -1,35 +1,30 @@
 <?xml version="1.0" ?>
-<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v1.dtd"
-	[
-	<!ENTITY INPUTBASE "">
-	<!ENTITY OUTPUTBASE "">
-	]
->
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
 
 <config>
 
 	<module name="network">
 		<param name="timeVariantNetwork"	value="true" />
-		<param name="inputNetworkFile" value="&INPUTBASE;network.xml" />
+		<param name="inputNetworkFile" value="network.xml" />
 	</module>
 	
 	<module name="plans">
-		<param name="inputPlansFile" value="&INPUTBASE;plans.xml" />
+		<param name="inputPlansFile" value="plans.xml" />
 	</module>
 
 	<module name="roadpricing">
-		<param name="tollLinksFile" value="&INPUTBASE;toll.xml" />
+		<param name="tollLinksFile" value="toll.xml" />
 	</module>
 
 	<module name="telematics">
-		<param name="incidentsFile"	value="&INPUTBASE;incidents.xml" />
+		<param name="incidentsFile"	value="incidents.xml" />
 		<param name="usePredictedTravelTimes" value="false" />
 		<param name="predictedTravelTimeRoute1" value="1003.0" />
 		<param name="predictedTravelTimeRoute2"	value="603.0" />
 	</module>
 
 	<module name="controler">
-		<param name="outputDirectory" value="&OUTPUTBASE;output_a1" />
+		<param name="outputDirectory" value="../../output/travelTimePrediction2Routes/a1" />
 		<param name="firstIteration" value="0" />
 		<param name="lastIteration" value="0" />
 		<param name="writeEventsInterval" value="1" />
@@ -45,16 +40,20 @@
 		<param name="traveling" value="-6" />
 		<param name="waiting" value="-0" />
 		
-		<param name="activityType_0"            value="h" /> <!-- home -->
-		<param name="activityPriority_0"        value="1" />
-		<param name="activityTypicalDuration_0" value="12:00:00" />
-	
-		<param name="activityType_1"            value="w" /> <!-- work -->
-		<param name="activityPriority_1"        value="1" />
-		<param name="activityTypicalDuration_1" value="08:00:00" />
-		<param name="activityOpeningTime_1"     value="06:00:00" />
-		<param name="activityLatestStartTime_1" value="06:00:00" />
-		<param name="activityClosingTime_1"     value="18:00:00" />
+		
+		<parameterset type="activityParams" >
+				<param name="activityType" value="h" />
+				<param name="typicalDuration" value="12:00:00" />
+		</parameterset>
+		
+		<parameterset type="activityParams" >
+				<param name="activityType" value="w" />
+				<param name="closingTime" value="18:00:00" />
+				<param name="latestStartTime" value="06:00:00" />
+				<param name="openingTime" value="06:00:00" />
+				<param name="typicalDuration" value="08:00:00" />
+		</parameterset>
+		
 	</module>
 	
 	<module name="qsim">
