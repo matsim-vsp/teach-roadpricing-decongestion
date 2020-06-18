@@ -37,7 +37,6 @@
 
 		<param name="lateArrival" value="0" />
 		<param name="performing" value="0" />
-		<param name="traveling" value="-6" />
 		<param name="waiting" value="-0" />
 		
 		
