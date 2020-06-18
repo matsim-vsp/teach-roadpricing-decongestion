@@ -17,7 +17,7 @@
  *   See also COPYING, LICENSE and WARRANTY file                           *
  *                                                                         *
  * *********************************************************************** */
-package telematics.roadpricing;
+package telematics.common;
 
 import org.apache.commons.math.stat.StatUtils;
 import org.matsim.api.core.v01.Id;

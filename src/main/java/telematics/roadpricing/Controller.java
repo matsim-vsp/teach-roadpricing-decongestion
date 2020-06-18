@@ -45,9 +45,10 @@ import org.matsim.core.gbl.MatsimRandom;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.scenario.ScenarioUtils;
 
-import playground.vsptelematics.common.IncidentGenerator;
-import playground.vsptelematics.common.TelematicsConfigGroup;
-import playground.vsptelematics.ha1.RouteTTObserver;
+import telematics.common.IncidentGenerator;
+import telematics.common.RouteTTObserver;
+import telematics.common.TelematicsConfigGroup;
+import telematics.common.RouteTTObserver;
 
 /**
  * @author dgrether
