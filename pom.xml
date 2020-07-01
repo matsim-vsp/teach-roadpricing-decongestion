@@ -81,8 +81,14 @@
 			<artifactId>roadpricing</artifactId>
 			<version>${matsim.version}</version>
 		</dependency>
-		<!--Dependencies from where stated above to here are added as a service; they can be removed if you don't need them-->
 
+		<dependency>
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>decongestion</artifactId>
+			<version>${matsim.version}</version>
+		</dependency>
+
+		<!--Dependencies from where stated above to here are added as a service; they can be removed if you don't need them-->
 	</dependencies>
 
 	<build>
@@ -131,7 +137,7 @@
 								<!-- This bit sets the main class for the executable jar as you otherwise would with the assembly plugin -->
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>telematics.roadpricing.RoadpricingGUI</Main-Class>
+										<Main-Class>telematics.roadpricing.RoadpricingWithPredictedRouteTTGUI</Main-Class>
 										<Specification-Vendor>org.matsim</Specification-Vendor>
 										<Implementation-Vendor>org.matsim</Implementation-Vendor>
 										<Implementation-Version>${project.version}</Implementation-Version>

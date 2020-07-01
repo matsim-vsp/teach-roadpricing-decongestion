@@ -1,6 +1,6 @@
 /* *********************************************************************** *
  * project: org.matsim.*
- * Controller
+ * RoadPricingWithPredictedRouteTTController
  *                                                                         *
  * *********************************************************************** *
  *                                                                         *
@@ -48,17 +48,16 @@ import org.matsim.core.scenario.ScenarioUtils;
 import telematics.common.IncidentGenerator;
 import telematics.common.RouteTTObserver;
 import telematics.common.TelematicsConfigGroup;
-import telematics.common.RouteTTObserver;
 
 /**
  * @author dgrether
  *
  */
-public class Controller {
-	private static final Logger log = Logger.getLogger(Controller.class);
+public class RoadPricingWithPredictedRouteTTController {
+	private static final Logger log = Logger.getLogger(RoadPricingWithPredictedRouteTTController.class);
 	TelematicsConfigGroup telematicsConfigGroup;
 	
-	public Controller(String[] args){
+	public RoadPricingWithPredictedRouteTTController(String[] args){
 		Config config = ConfigUtils.loadConfig( args[0]) ;
 		Scenario scenario = ScenarioUtils.loadScenario( config ) ;
 		Controler c = new Controler(scenario);
@@ -159,6 +158,6 @@ public class Controller {
 	
 	
 	public static void main(String[] args) {
-		new Controller(args);
+		new RoadPricingWithPredictedRouteTTController(args);
 	}
 }
