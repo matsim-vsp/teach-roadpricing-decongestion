@@ -20,11 +20,13 @@
 package telematics.common;
 
 import org.apache.commons.math.stat.StatUtils;
+import org.geotools.metadata.iso.extent.GeographicBoundingBoxImpl;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.events.*;
 import org.matsim.api.core.v01.events.handler.*;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.config.groups.ControlerConfigGroup;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
 import org.matsim.core.controler.events.AfterMobsimEvent;
 import org.matsim.core.controler.events.IterationEndsEvent;
@@ -40,6 +42,7 @@ import java.util.*;
 public class RouteTTObserver implements PersonDepartureEventHandler, PersonArrivalEventHandler,
 		LinkEnterEventHandler, IterationEndsListener, AfterMobsimListener, VehicleEntersTrafficEventHandler, VehicleLeavesTrafficEventHandler {
 
+	private final int lastIteration;
 	private Set<Id> route1;
 
 	private Set<Id> route2;
@@ -61,9 +64,11 @@ public class RouteTTObserver implements PersonDepartureEventHandler, PersonArriv
 	private String filename;
 	
 	Vehicle2DriverEventHandler vehicle2driver = new Vehicle2DriverEventHandler();
+	private List<List<String>> iterationInfos = new ArrayList<>();
 
 	@Inject
-	RouteTTObserver(OutputDirectoryHierarchy controlerIO, EventsManager eventsManager) {
+	RouteTTObserver(OutputDirectoryHierarchy controlerIO, EventsManager eventsManager, ControlerConfigGroup controlerCfg) {
+		this.lastIteration = controlerCfg.getLastIteration();
 		this.filename = controlerIO.getOutputFilename("routeTravelTimes.txt");
 		eventsManager.addHandler(this);
 		this.reset(0);
@@ -103,40 +108,67 @@ public class RouteTTObserver implements PersonDepartureEventHandler, PersonArriv
 
 	@Override
 	public void notifyIterationEnds(IterationEndsEvent event) {
-		try {
-			writer = org.matsim.core.utils.io.IOUtils.getBufferedWriter(filename);
-			writer.write("it\tn_1\tn_2\ttt_avg_1\ttt_avg_2\ttt_sum_1\ttt_sum_2\ttt_sum");
-			writer.newLine();
-			writer.write(String.valueOf(event.getIteration()));
-			writer.write("\t");
-			writer.write(String.valueOf(route1.size()));
-			writer.write("\t");
-			writer.write(String.valueOf(route2.size()));
-			writer.write("\t");
 
-			if (route1.isEmpty())
-				writer.write("0");
-			else
-				writer.write(String.valueOf(avr_route1TTs));
-			writer.write("\t");
+			List<String> iterationInfo = new ArrayList<>();
+			iterationInfo.add(String.valueOf(event.getIteration()));
+			iterationInfo.add(String.valueOf(route1.size()));
+			iterationInfo.add(String.valueOf(route2.size()));
+			if (route1.isEmpty()) iterationInfo.add("0");
+			else iterationInfo.add(String.valueOf(avr_route1TTs));
+			if (route2.isEmpty()) iterationInfo.add("0");
+			else iterationInfo.add(String.valueOf(avr_route2TTs));
+			iterationInfo.add(String.valueOf(sumRoute1TTs));
+			iterationInfo.add(String.valueOf(sumRoute2TTs));
+			iterationInfo.add(String.valueOf(sumRoute1TTs + sumRoute2TTs));
 
-			if (route2.isEmpty())
-				writer.write("0");
-			else
-				writer.write(String.valueOf(avr_route2TTs));
+		this.iterationInfos.add(iterationInfo);
 
-			writer.write("\t");
-			writer.write(String.valueOf(sumRoute1TTs));
-			writer.write("\t");
-			writer.write(String.valueOf(sumRoute2TTs));
-			writer.write("\t");
-			writer.write(String.valueOf(sumRoute1TTs + sumRoute2TTs));
-			
-			writer.newLine();
-			writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(event.getIteration() == this.lastIteration){
+			try {
+				writer = org.matsim.core.utils.io.IOUtils.getBufferedWriter(filename);
+				writer.write("it\tn_1\tn_2\ttt_avg_1\ttt_avg_2\ttt_sum_1\ttt_sum_2\ttt_sum");
+				writer.newLine();
+
+				for(int i= this.iterationInfos.size() - 1; i>=0; i-- ){
+					List<String> line = iterationInfos.get(i);
+					for(String e : line){
+						writer.write(e + "\t");
+					}
+					writer.newLine();
+				}
+
+//				writer.write(String.valueOf(event.getIteration()));
+//				writer.write("\t");
+//				writer.write(String.valueOf(route1.size()));
+//				writer.write("\t");
+//				writer.write(String.valueOf(route2.size()));
+//				writer.write("\t");
+//
+//				if (route1.isEmpty())
+//					writer.write("0");
+//				else
+//					writer.write(String.valueOf(avr_route1TTs));
+//				writer.write("\t");
+//
+//				if (route2.isEmpty())
+//					writer.write("0");
+//				else
+//					writer.write(String.valueOf(avr_route2TTs));
+//
+//				writer.write("\t");
+//				writer.write(String.valueOf(sumRoute1TTs));
+//				writer.write("\t");
+//				writer.write(String.valueOf(sumRoute2TTs));
+//				writer.write("\t");
+//				writer.write(String.valueOf(sumRoute1TTs + sumRoute2TTs));
+//
+//				writer.newLine();
+				writer.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+
 	}
 
 	@Override
