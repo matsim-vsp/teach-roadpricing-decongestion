@@ -22,7 +22,13 @@ package telematics.roadpricing;
 
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.decongestion.DecongestionConfigGroup;
+import org.matsim.contrib.decongestion.DecongestionControlerListener;
 import org.matsim.contrib.decongestion.DecongestionModule;
+import org.matsim.contrib.decongestion.data.DecongestionInfo;
+import org.matsim.contrib.decongestion.handler.DelayAnalysis;
+import org.matsim.contrib.decongestion.handler.IntervalBasedTolling;
+import org.matsim.contrib.decongestion.handler.IntervalBasedTollingAll;
+import org.matsim.contrib.decongestion.handler.PersonVehicleTracker;
 import org.matsim.contrib.decongestion.routing.TollTimeDistanceTravelDisutilityFactory;
 import org.matsim.contrib.roadpricing.RoadPricingConfigGroup;
 import org.matsim.contrib.roadpricing.RoadPricingModule;
@@ -60,10 +66,28 @@ public class RoadPricingAndDecongestionController {
 			});
 		} else {
 			controler.addOverridingModule(new RoadPricingModule());
+			controler.addOverridingModule(new AbstractModule() {
+				@Override
+				public void install() {
+					this.bind(DecongestionInfo.class).asEagerSingleton();
+
+//					this.bind(IntervalBasedTollingAll.class).asEagerSingleton();
+//					this.bind(IntervalBasedTolling.class).to(IntervalBasedTollingAll.class);
+//					this.addEventHandlerBinding().to(IntervalBasedTollingAll.class);
+
+					this.bind(DelayAnalysis.class).asEagerSingleton();
+					this.addEventHandlerBinding().to(DelayAnalysis.class);
+
+					this.addEventHandlerBinding().to(PersonVehicleTracker.class).asEagerSingleton();
+
+					this.addControlerListenerBinding().to(DecongestionControlerListener.class);
+				}
+			});
 		}
 		controler.addOverridingModule(new AbstractModule() {
 			public void install() {
 				addControlerListenerBinding().to(RouteTTObserver.class);
+
 			}
 		});
 
