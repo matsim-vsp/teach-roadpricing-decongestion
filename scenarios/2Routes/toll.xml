@@ -9,7 +9,7 @@
 			<cost start_time="00:00" end_time="24:00" amount="0.00" />
 		</link>
 		<link id="3" >
-			<cost start_time="00:00" end_time="24:00" amount="0.00" />
+			<cost start_time="00:00" end_time="24:00" amount="0.501" />
 		</link>
 	</links>
 

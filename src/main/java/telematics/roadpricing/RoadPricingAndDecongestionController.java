@@ -43,19 +43,30 @@ public class RoadPricingAndDecongestionController {
 	}
 
 	static void run(Config config) {
-		config.plansCalcRoute().setRoutingRandomness(0.);
+//		config.plansCalcRoute().setRoutingRandomness(0.);
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		Controler controler = new Controler(scenario);
-		controler.addOverridingModule(new DecongestionModule(scenario));
-		controler.addOverridingModule(new RoadPricingModule());
-		final TollTimeDistanceTravelDisutilityFactory travelDisutilityFactory = new TollTimeDistanceTravelDisutilityFactory();
-		travelDisutilityFactory.setSigma(0.0D);
+
+		DecongestionConfigGroup decongestionConfigGroup = (DecongestionConfigGroup) scenario.getConfig().getModules().get(DecongestionConfigGroup.GROUP_NAME);
+		if(decongestionConfigGroup.isEnableDecongestionPricing()){
+			controler.addOverridingModule(new DecongestionModule(scenario));
+			final TollTimeDistanceTravelDisutilityFactory travelDisutilityFactory = new TollTimeDistanceTravelDisutilityFactory();
+			travelDisutilityFactory.setSigma(config.plansCalcRoute().getRoutingRandomness());
+			controler.addOverridingModule(new AbstractModule() {
+				@Override
+				public void install() {
+					bindCarTravelDisutilityFactory().toInstance(travelDisutilityFactory);
+				}
+			});
+		} else {
+			controler.addOverridingModule(new RoadPricingModule());
+		}
 		controler.addOverridingModule(new AbstractModule() {
 			public void install() {
 				addControlerListenerBinding().to(RouteTTObserver.class);
-				this.bindCarTravelDisutilityFactory().toInstance(travelDisutilityFactory);
 			}
 		});
+
 		controler.run();
 	}
 
