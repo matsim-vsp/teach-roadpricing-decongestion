@@ -43,9 +43,11 @@ public class RoadPricingAndDecongestionController {
 	}
 
 	static void run(Config config) {
+		config.plansCalcRoute().setRoutingRandomness(0.);
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		Controler controler = new Controler(scenario);
 		controler.addOverridingModule(new DecongestionModule(scenario));
+		controler.addOverridingModule(new RoadPricingModule());
 		final TollTimeDistanceTravelDisutilityFactory travelDisutilityFactory = new TollTimeDistanceTravelDisutilityFactory();
 		travelDisutilityFactory.setSigma(0.0D);
 		controler.addOverridingModule(new AbstractModule() {
@@ -54,7 +56,6 @@ public class RoadPricingAndDecongestionController {
 				this.bindCarTravelDisutilityFactory().toInstance(travelDisutilityFactory);
 			}
 		});
-		controler.addOverridingModule(new RoadPricingModule());
 		controler.run();
 	}
 
